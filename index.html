@@ -1,0 +1,133 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"></head><body>
+<title>10-Week Run Tracker</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@500;600;700&display=swap">
+<link rel="stylesheet" href="styles.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+
+<div class="wrap">
+  <div class="top">
+    <div>
+      <h1>10-Week Run Tracker</h1>
+      <div class="sub" id="subline">Loading your log…</div>
+    </div>
+    <span class="chip" id="saveChip">Loading…</span>
+  </div>
+
+  <div class="card" id="authCard">
+    <div class="card-h"><h2>Account</h2><button class="btn ghost sm" id="signOutBtn" type="button" hidden>Sign out</button></div>
+    <div id="signedOut">
+      <form id="authForm" class="form" autocomplete="on">
+        <div class="field"><label for="authEmail">Email</label><input id="authEmail" type="email" autocomplete="email" required></div>
+        <div class="field"><label for="authPassword">Password</label><input id="authPassword" type="password" autocomplete="current-password" minlength="6" required></div>
+        <div class="field wide"><div class="row"><button class="btn" type="submit" id="signInBtn">Sign in</button><button class="btn ghost" type="button" id="signUpBtn">Create account</button></div><div class="err" id="authErr" role="alert"></div></div>
+      </form>
+    </div>
+    <div id="signedIn" hidden><span class="muted small" id="authUser"></span></div>
+  </div>
+
+  <div class="tabs" role="tablist" id="tabs">
+    <button role="tab" data-tab="overview" id="t-overview">Overview</button>
+    <button role="tab" data-tab="log" id="t-log">Log a run</button>
+    <button role="tab" data-tab="plan" id="t-plan">Plan</button>
+    <button role="tab" data-tab="records" id="t-records">Records</button>
+  </div>
+
+  <!-- OVERVIEW -->
+  <section class="view" id="v-overview" role="tabpanel">
+    <div id="banners" class="view"></div>
+    <div class="card" id="nextCard"></div>
+    <div class="tiles" id="tiles"></div>
+    <div class="card">
+      <div class="card-h">
+        <h2 id="chartTitle">Progress</h2>
+        <div class="row">
+          <div class="seg" id="chartSeg">
+            <button data-chart="pace" aria-pressed="true">Pace</button>
+            <button data-chart="dist" aria-pressed="false">Distance</button>
+            <button data-chart="week" aria-pressed="false">Weekly km</button>
+          </div>
+          <button class="btn ghost sm" id="tblBtn" aria-pressed="false">Table view</button>
+        </div>
+      </div>
+      <div class="small muted" id="chartCap"></div>
+      <div class="chart" id="chart"></div>
+      <div class="key" id="chartKey"></div>
+    </div>
+    <div class="card">
+      <div class="card-h"><h2>Your training paces</h2></div>
+      <div class="row">
+        <div class="field" style="max-width:220px">
+          <label for="base10k">Recent 10K finishing time</label>
+          <input id="base10k" type="text" inputmode="numeric" placeholder="e.g. 1:02:30" autocomplete="off">
+        </div>
+        <button class="btn" id="saveBase">Set paces</button>
+        <button class="btn ghost" id="clearBase" hidden>Clear</button>
+      </div>
+      <div class="err" id="baseErr"></div>
+      <div id="paces"></div>
+    </div>
+  </section>
+
+  <!-- LOG -->
+  <section class="view" id="v-log" role="tabpanel" hidden>
+    <div class="card">
+      <div class="card-h"><h2 id="formTitle">Log a run</h2><span class="preview" id="pacePrev"></span></div>
+      <form id="runForm" class="form" autocomplete="off">
+        <div class="field"><label for="f-date">Date</label><input id="f-date" type="date" required></div>
+        <div class="field"><label for="f-type">Session</label>
+          <select id="f-type">
+            <option value="easy">Easy (Zone 2)</option>
+            <option value="quality">Quality (intervals / tempo)</option>
+            <option value="long">Long run</option>
+            <option value="recovery">Recovery jog or walk</option>
+            <option value="test">Test or race</option>
+          </select></div>
+        <div class="field"><label for="f-dist">Distance (km)</label><input id="f-dist" type="number" step="0.01" min="0.1" inputmode="decimal" placeholder="5.00" required></div>
+        <div class="field"><label for="f-time">Time</label><input id="f-time" type="text" inputmode="numeric" placeholder="mm:ss or h:mm:ss" required></div>
+        <div class="field"><label for="f-rpe">Effort <output id="rpeOut">4</output>/10</label><input id="f-rpe" type="range" min="1" max="10" value="4"></div>
+        <div class="field"><label for="f-hr">Average heart rate (optional)</label><input id="f-hr" type="number" min="40" max="230" inputmode="numeric" placeholder="bpm"></div>
+        <div class="field wide"><label class="check field" for="f-knee" style="flex-direction:row"><input id="f-knee" type="checkbox"> Knee felt off during or after this run</label></div>
+        <div class="field wide"><label for="f-notes">Notes (optional)</label><textarea id="f-notes" rows="2" placeholder="How it felt, route, weather"></textarea></div>
+        <div class="field wide"><div class="row"><button class="btn" type="submit" id="saveRun">Save run</button><button class="btn ghost" type="button" id="cancelEdit" hidden>Cancel edit</button></div><div class="err" id="formErr" role="alert"></div></div>
+      </form>
+    </div>
+    <div class="card">
+      <div class="card-h"><h2>All runs</h2><button class="btn ghost sm" id="exportBtn" hidden>Export CSV</button></div>
+      <div class="runs" id="runList"></div>
+    </div>
+  </section>
+
+  <!-- PLAN -->
+  <section class="view" id="v-plan" role="tabpanel" hidden>
+    <div class="card">
+      <div class="card-h"><h2>Your 10-week plan</h2></div>
+      <div class="row">
+        <div class="field" style="max-width:220px"><label for="planStart">Week 1 starts on</label><input id="planStart" type="date"></div>
+        <div class="small muted" style="max-width:48ch">Pick any day and the plan snaps to that week's Monday. Runs you log are matched to a week by date and to a slot by session type.</div>
+      </div>
+    </div>
+    <div class="weeks" id="weeks"></div>
+    <div class="card">
+      <div class="card-h"><h2>Workout guide</h2></div>
+      <div class="guide">
+        <div><h3>Easy and long runs</h3><ul><li>Conversational pace in Zone 2.</li><li>Do not chase speed.</li><li>If heart rate climbs too high, slow down or walk briefly.</li></ul></div>
+        <div><h3>Short intervals (weeks 3 and 6)</h3><ul><li>10 min easy warm-up.</li><li>1 min fast, 2 min slow jog, repeat 5 to 6 times.</li><li>5 to 10 min cool-down.</li></ul></div>
+        <div><h3>Tempo intervals (weeks 5, 7, 9)</h3><ul><li>10 min warm-up.</li><li>5 min comfortably hard, 2 min easy jog, repeat 3 times.</li><li>5 to 10 min cool-down.</li></ul></div>
+        <div><h3>Rules</h3><ul><li>About 80% of running stays easy.</li><li>Never double up to make up a missed workout.</li><li>Tired? Repeat the week instead of progressing.</li><li>Stop if knee pain worsens, swells or changes your stride.</li></ul></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- RECORDS -->
+  <section class="view" id="v-records" role="tabpanel" hidden>
+    <div class="pbs" id="pbs"></div>
+    <div class="card">
+      <div class="card-h"><h2>Personal best history</h2></div>
+      <div class="hist" id="hist"></div>
+    </div>
+  </section>
+</div>
+
+<script src="script.js"></script>

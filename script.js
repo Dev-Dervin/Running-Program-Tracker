@@ -110,6 +110,17 @@ function setAuthUi(user){
   $('#authUser').textContent=user?'Signed in as '+user.email:'';
 }
 function authError(message){$('#authErr').textContent=message||''}
+function setTheme(theme){
+  document.documentElement.setAttribute('data-theme',theme);
+  try{localStorage.setItem('runtracker-theme',theme)}catch(e){}
+  $('#themeBtn').textContent=theme==='dark'?'☀':'◐';
+  $('#themeBtn').setAttribute('aria-label',theme==='dark'?'Use light theme':'Use dark theme');
+}
+function initTheme(){
+  var saved=null;
+  try{saved=localStorage.getItem('runtracker-theme')}catch(e){}
+  setTheme(saved==='dark'||saved==='light'?saved:(window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'));
+}
 function setAuthenticatedStore(){
   store={kind:'supabase',ref:true};
   setChip('Connected to your account',true);
@@ -516,6 +527,11 @@ function onClick(e){
 }
 
 function init(){
+  initTheme();
+  $('#themeBtn').addEventListener('click',function(){
+    setTheme(document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark');
+    if(!$('#v-overview').hidden)requestAnimationFrame(drawChart);
+  });
   $('#authForm').addEventListener('submit',function(e){
     e.preventDefault();
     authError('');
@@ -534,6 +550,30 @@ function init(){
       if(result.error)throw result.error;
       authError(result.data.session?'':'Check your email to confirm your account, then sign in.');
     }).catch(function(e){authError(e.message)}).finally(function(){$('#signUpBtn').disabled=false});
+  });
+  $('#googleSignIn').addEventListener('click',function(){
+    authError('');
+    supabaseClient.auth.signInWithOAuth({
+      provider:'google',
+      options:{redirectTo:window.location.origin+window.location.pathname}
+    }).then(function(result){
+      if(result.error)throw result.error;
+    }).catch(function(e){authError(e.message)});
+  });
+  $('#forgotPassword').addEventListener('click',function(){
+    authError('');
+    var email=$('#authEmail').value.trim();
+    if(!email){authError('Enter your email first, then choose Forgot password.');$('#authEmail').focus();return}
+    supabaseClient.auth.resetPasswordForEmail(email,{redirectTo:window.location.origin+window.location.pathname}).then(function(result){
+      if(result.error)throw result.error;
+      authError('Password reset instructions sent. Check your email.');
+    }).catch(function(e){authError(e.message)});
+  });
+  $('#passwordToggle').addEventListener('click',function(){
+    var input=$('#authPassword'),visible=input.type==='text';
+    input.type=visible?'password':'text';
+    this.textContent=visible?'Show':'Hide';
+    this.setAttribute('aria-label',visible?'Show password':'Hide password');
   });
   $('#signOutBtn').addEventListener('click',function(){
     supabaseClient.auth.signOut().catch(function(e){authError(e.message)});

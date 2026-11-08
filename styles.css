@@ -197,3 +197,57 @@ td.r,th.r{text-align:right}
 @media(max-width:560px){.hist .h{grid-template-columns:1fr}}
 .hist .hd{font-weight:600}
 .hist .hl{display:flex;flex-direction:column;gap:2px}
+
+/* product shell */
+:root{
+  --shadow:0 12px 32px rgba(18,32,42,.06);
+  --shadow-sm:0 4px 14px rgba(18,32,42,.06);
+}
+body{min-height:100vh;background:
+  radial-gradient(circle at 8% 0%,rgba(14,124,107,.08),transparent 30rem),
+  var(--bg)}
+.app-shell{max-width:1120px;margin:0 auto;display:flex;flex-direction:column;gap:20px}
+.top{padding:10px 0 4px;align-items:center}
+.brand{display:flex;align-items:center;gap:12px}
+.brand-mark{display:grid;place-items:center;width:42px;height:42px;border-radius:12px;background:var(--accent);color:var(--accent-ink);font-family:var(--f-display);font-size:15px;font-weight:700;letter-spacing:.04em;box-shadow:0 6px 16px rgba(14,124,107,.2)}
+.eyebrow{margin:0 0 2px;color:var(--accent);font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase}
+.top h1{font-size:32px}
+.top-actions{display:flex;align-items:center;gap:10px}
+.icon-btn{width:36px;height:36px;border:1px solid var(--line2);border-radius:9px;background:var(--surface);color:var(--ink);cursor:pointer;font-size:18px}
+.icon-btn:hover{border-color:var(--accent);background:var(--accent-soft)}
+.card,.tile,.pbc,.wk{box-shadow:var(--shadow-sm)}
+.card{border-radius:14px;padding:20px}
+.auth-card{}
+.auth-card .card-h{}
+#authCard{border-color:var(--line2);background:linear-gradient(135deg,var(--surface),var(--accent-soft))}
+#authCard .card-h{margin-bottom:14px}
+.password-field{position:relative}
+.password-field input{padding-right:60px}
+.password-toggle{position:absolute;right:8px;top:50%;transform:translateY(-50%);border:0;background:none;color:var(--accent);font-size:12px;font-weight:700;cursor:pointer}
+.text-btn{border:0;background:none;color:var(--accent);padding:2px 0;font-size:13px;font-weight:600;cursor:pointer}
+.text-btn:hover{text-decoration:underline}
+.google-btn{background:var(--surface);color:var(--ink);border-color:var(--line2)}
+.google-btn span{display:inline-grid;place-items:center;width:18px;height:18px;border-radius:50%;background:#fff;color:#4285f4;font-weight:700}
+.account-note{margin:8px 0 0;color:var(--ink2);font-size:13px}
+.tabs{position:sticky;top:0;z-index:5;padding-top:4px;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(12px)}
+.tabs button{padding:12px 16px;font-size:17px}
+.btn{transition:transform .15s ease,box-shadow .15s ease,background .15s ease}
+.btn:hover{transform:translateY(-1px);box-shadow:var(--shadow-sm)}
+.tile,.pbc,.wk{transition:transform .15s ease,box-shadow .15s ease}
+.tile:hover,.pbc:hover,.wk:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
+.field input,.field select,.field textarea{transition:border-color .15s ease,box-shadow .15s ease}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft);outline:0}
+.run{padding:16px 0}
+.run:first-child{padding-top:4px}
+.empty{border:1px dashed var(--line2);border-radius:10px}
+
+@media(max-width:620px){
+  body{padding-top:12px}
+  .top h1{font-size:27px}
+  .top{align-items:flex-start}
+  .top-actions{width:100%;justify-content:flex-end}
+  .card{padding:16px}
+  .tabs{margin-inline:-16px;padding-inline:16px}
+  .tabs button{padding-inline:12px;font-size:16px}
+  .google-btn{width:100%}
+}

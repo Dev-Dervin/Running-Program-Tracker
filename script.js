@@ -533,6 +533,7 @@ function onClick(e){
 
 function init(){
   initTheme();
+  try{$('#rememberMe').checked=localStorage.getItem('runtracker-remember')!=='false'}catch(e){}
   $('#themeBtn').addEventListener('click',function(){
     setTheme(document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark');
     if(!$('#v-overview').hidden)requestAnimationFrame(drawChart);
@@ -541,20 +542,29 @@ function init(){
     e.preventDefault();
     authError('');
     var email=$('#authEmail').value.trim(),password=$('#authPassword').value;
+    try{localStorage.setItem('runtracker-remember',$('#rememberMe').checked?'true':'false')}catch(e){}
     $('#signInBtn').disabled=true;
     supabaseClient.auth.signInWithPassword({email:email,password:password}).then(function(result){
       if(result.error)throw result.error;
     }).catch(function(e){authError(e.message)}).finally(function(){$('#signInBtn').disabled=false});
   });
-  $('#signUpBtn').addEventListener('click',function(){
-    authError('');
-    var email=$('#authEmail').value.trim(),password=$('#authPassword').value;
-    if(!email||password.length<6){authError('Enter an email and a password with at least 6 characters.');return}
-    $('#signUpBtn').disabled=true;
-    supabaseClient.auth.signUp({email:email,password:password}).then(function(result){
+  $('#registerForm').addEventListener('submit',function(e){
+    e.preventDefault();
+    var name=$('#registerName').value.trim(),age=Number($('#registerAge').value),email=$('#registerEmail').value.trim(),password=$('#registerPassword').value,confirm=$('#registerConfirm').value;
+    $('#registerErr').textContent='';
+    if(password!==confirm){$('#registerErr').textContent='Passwords do not match.';return}
+    if(!age||age<13||age>120){$('#registerErr').textContent='Enter an age between 13 and 120.';return}
+    $('#registerBtn').disabled=true;
+    supabaseClient.auth.signUp({email:email,password:password,options:{data:{full_name:name,age:age}}}).then(function(result){
       if(result.error)throw result.error;
-      authError(result.data.session?'':'Check your email to confirm your account, then sign in.');
-    }).catch(function(e){authError(e.message)}).finally(function(){$('#signUpBtn').disabled=false});
+      $('#registerErr').textContent=result.data.session?'Account created.':'Account created. Check your email to confirm your account.';
+    }).catch(function(e){$('#registerErr').textContent=e.message}).finally(function(){$('#registerBtn').disabled=false});
+  });
+  $('#showRegister').addEventListener('click',function(){
+    $('#authForm').hidden=true;$('#registerForm').hidden=false;$('#authCard h2').textContent='Create your account';$('#registerName').focus();
+  });
+  $('#showLogin').addEventListener('click',function(){
+    $('#registerForm').hidden=true;$('#authForm').hidden=false;$('#authCard h2').textContent='Sign in to continue';$('#authEmail').focus();
   });
   $('#googleSignIn').addEventListener('click',function(){
     authError('');

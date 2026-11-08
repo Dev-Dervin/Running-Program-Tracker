@@ -233,13 +233,26 @@ body{min-height:100vh;background:
 #authCard .card-h{margin-bottom:14px}
 .password-field{position:relative}
 .password-field input{padding-right:60px}
+.auth-form{display:flex;flex-direction:column;gap:14px}
+.auth-form .field{gap:6px}
+.icon-field{position:relative}
+.icon-field>input,.icon-field>.password-field input{padding-left:40px}
+.input-icon{position:absolute;left:13px;top:34px;color:var(--muted);font-size:15px;line-height:1;z-index:1}
+.auth-options{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:-3px}
+.remember{display:flex;align-items:center;gap:7px;color:var(--ink2);font-size:13px;cursor:pointer}
+.remember input{width:16px;height:16px;accent-color:var(--accent)}
+.auth-submit{width:100%;min-height:44px;margin-top:2px}
+.auth-divider{display:flex;align-items:center;gap:12px;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.1em}
+.auth-divider::before,.auth-divider::after{content:"";height:1px;flex:1;background:var(--line2)}
+.auth-divider span{padding:0 2px}
+.google-btn{width:100%;min-height:44px}
+.auth-switch{margin:2px 0 0;text-align:center;color:var(--ink2);font-size:13px}
+.auth-switch .text-btn{display:inline;padding:0}
+.register-heading{margin-bottom:0}
+.register-heading h2{font-size:24px}
 .password-toggle{position:absolute;right:8px;top:50%;transform:translateY(-50%);border:0;background:none;color:var(--accent);font-size:12px;font-weight:700;cursor:pointer}
 .text-btn{border:0;background:none;color:var(--accent);padding:2px 0;font-size:13px;font-weight:600;cursor:pointer}
 .text-btn:hover{text-decoration:underline}
-.auth-actions{gap:8px}
-.auth-actions .btn{min-height:42px}
-.auth-actions #signInBtn{min-width:105px}
-.auth-actions #signUpBtn{min-width:125px}
 .google-btn{background:var(--surface);color:var(--ink);border-color:var(--line2);display:inline-flex;align-items:center;justify-content:center;gap:9px}
 .google-btn:hover{background:#fff;border-color:#9aa0a6;color:#202124}
 .google-logo{width:18px;height:18px;flex:none}

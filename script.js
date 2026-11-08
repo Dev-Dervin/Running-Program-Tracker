@@ -104,10 +104,15 @@ function setChip(t,ok){var c=$('#saveChip');c.textContent=t;c.className='chip'+(
 
 function setAuthUi(user){
   authUser=user||null;
+  $('#authHome').hidden=!!user;
+  $('#trackerApp').hidden=!user;
+  $('#saveChip').hidden=!user;
+  $('#userMenu').hidden=!user;
   $('#signedOut').hidden=!!user;
   $('#signedIn').hidden=!user;
-  $('#signOutBtn').hidden=!user;
   $('#authUser').textContent=user?'Signed in as '+user.email:'';
+  $('#headerUser').textContent=user?user.email:'';
+  $('#userAvatar').textContent=user?(user.email||'?').charAt(0).toUpperCase():'?';
 }
 function authError(message){$('#authErr').textContent=message||''}
 function setTheme(theme){

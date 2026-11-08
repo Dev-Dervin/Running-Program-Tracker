@@ -17,12 +17,24 @@
     </div>
     <div class="top-actions">
       <button class="icon-btn" id="themeBtn" type="button" aria-label="Toggle color theme" title="Toggle color theme">◐</button>
-      <span class="chip" id="saveChip">Loading…</span>
+      <span class="chip" id="saveChip" hidden>Loading…</span>
+      <div class="user-menu" id="userMenu" hidden>
+        <span class="avatar" id="userAvatar" aria-hidden="true">?</span>
+        <span class="user-email" id="headerUser"></span>
+        <button class="btn ghost sm" id="signOutBtn" type="button">Sign out</button>
+      </div>
     </div>
   </div>
 
-  <div class="card" id="authCard">
-    <div class="card-h"><div><p class="eyebrow">Your account</p><h2>Save your progress</h2></div><button class="btn ghost sm" id="signOutBtn" type="button" hidden>Sign out</button></div>
+  <section class="auth-home" id="authHome">
+    <div class="auth-hero">
+      <p class="eyebrow">Train with intention</p>
+      <h2>Build your strongest 10K, one run at a time.</h2>
+      <p class="hero-copy">Follow a structured 10-week plan, understand your progress, and keep every run in one place.</p>
+      <div class="hero-points"><span>✓ Personalized plan</span><span>✓ Progress insights</span><span>✓ Secure sync</span></div>
+    </div>
+    <div class="card auth-card" id="authCard">
+      <div class="card-h"><div><p class="eyebrow">Welcome back</p><h2>Sign in to continue</h2></div></div>
     <div id="signedOut">
       <form id="authForm" class="form" autocomplete="on">
         <div class="field"><label for="authEmail">Email</label><input id="authEmail" type="email" autocomplete="email" required></div>
@@ -31,8 +43,10 @@
       </form>
     </div>
     <div id="signedIn" hidden><span class="muted small" id="authUser"></span><p class="account-note">Your runs, plan settings, and personal bests sync securely across devices.</p></div>
-  </div>
+    </div>
+  </section>
 
+  <div id="trackerApp" hidden>
   <div class="tabs" role="tablist" id="tabs">
     <button role="tab" data-tab="overview" id="t-overview">Overview</button>
     <button role="tab" data-tab="log" id="t-log">Log a run</button>
@@ -134,6 +148,7 @@
       <div class="hist" id="hist"></div>
     </div>
   </section>
+  </div>
 </div>
 
 <script src="script.js"></script>

@@ -236,8 +236,13 @@ body{min-height:100vh;background:
 .password-toggle{position:absolute;right:8px;top:50%;transform:translateY(-50%);border:0;background:none;color:var(--accent);font-size:12px;font-weight:700;cursor:pointer}
 .text-btn{border:0;background:none;color:var(--accent);padding:2px 0;font-size:13px;font-weight:600;cursor:pointer}
 .text-btn:hover{text-decoration:underline}
-.google-btn{background:var(--surface);color:var(--ink);border-color:var(--line2)}
-.google-btn span{display:inline-grid;place-items:center;width:18px;height:18px;border-radius:50%;background:#fff;color:#4285f4;font-weight:700}
+.auth-actions{gap:8px}
+.auth-actions .btn{min-height:42px}
+.auth-actions #signInBtn{min-width:105px}
+.auth-actions #signUpBtn{min-width:125px}
+.google-btn{background:var(--surface);color:var(--ink);border-color:var(--line2);display:inline-flex;align-items:center;justify-content:center;gap:9px}
+.google-btn:hover{background:#fff;border-color:#9aa0a6;color:#202124}
+.google-logo{width:18px;height:18px;flex:none}
 .account-note{margin:8px 0 0;color:var(--ink2);font-size:13px}
 .tabs{position:sticky;top:0;z-index:5;padding-top:4px;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(12px)}
 .tabs button{padding:12px 16px;font-size:17px}
